@@ -11,6 +11,7 @@ export default function ResponsiveNoteApp() {
   const [newSection, setNewSection] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [notesListOpen, setNotesListOpen] = useState(true);
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
 
   // Load notes from localStorage on component mount
   useEffect(() => {
@@ -27,6 +28,9 @@ export default function ResponsiveNoteApp() {
 
     // Set initial responsive state based on screen size
     const handleResize = () => {
+      const largeScreen = window.innerWidth >= 1024;
+      setIsLargeScreen(largeScreen);
+
       if (window.innerWidth < 768) {
         setSidebarOpen(false);
         setNotesListOpen(false);
@@ -86,7 +90,7 @@ export default function ResponsiveNoteApp() {
     setEditIndex(null);
     
     // On mobile, show the notes list after saving
-    if (window.innerWidth < 768) {
+    if (!isLargeScreen) {
       setNotesListOpen(true);
     }
   };
@@ -148,7 +152,7 @@ export default function ResponsiveNoteApp() {
             <button 
               onClick={() => {
                 setNotesListOpen(!notesListOpen);
-                if (window.innerWidth < 768) {
+                if (!isLargeScreen) {
                   setSidebarOpen(false);
                 }
               }}
@@ -320,7 +324,7 @@ export default function ResponsiveNoteApp() {
           </div>
 
           {/* Note Editor */}
-          <div className={`${!notesListOpen || window.innerWidth >= 1024 ? 'block' : 'hidden'} lg:block flex-1 p-4 overflow-y-auto`}>
+          <div className={`${!notesListOpen || isLargeScreen ? 'block' : 'hidden'} lg:block flex-1 p-4 overflow-y-auto`}>
             <div className="max-w-4xl mx-auto">
               <div className="mb-6 bg-white p-6 rounded-lg shadow-sm text-black">
                 <input
